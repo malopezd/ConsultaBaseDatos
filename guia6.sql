@@ -1,0 +1,14 @@
+--CASO 1
+SELECT
+    TO_CHAR(cli.NUMRUN,'99G999G999')||'-'||
+    cli.DVRUN AS "RUN CLIENTE",
+    cli.PNOMBRE || ' ' ||
+    cli.SNOMBRE || ' ' ||
+    cli.APPATERNO || ' ' ||
+    cli.APMATERNO AS "NOMBRE CLIENTE",
+    po.nombre_prof_ofic AS "PROFESION/OFICIO",
+    TO_CHAR(FECHA_NACIMIENTO, 'DD "de" Month') AS "DIA DE CUMPLEAÑOS "
+FROM CLIENTE cli
+    JOIN PROFESION_OFICIO po ON cli.COD_PROF_OFIC = po.cod_prof_ofic
+WHERE EXTRACT(MONTH FROM FECHA_NACIMIENTO) = 09
+ORDER BY TO_CHAR(FECHA_NACIMIENTO, 'DD "de" Month'), cli.APPATERNO DESC;
