@@ -83,23 +83,26 @@ ORDER BY cli.APPATERNO asc;
 --Informe 1
 
 SELECT
-    TO_CHAR(cli.NUMRUN,'99G999G999')||'-'||
-    cli.DVRUN AS "RUN CLIENTE",
-    cli.PNOMBRE || ' ' ||
-    cli.SNOMBRE || ' ' ||
-    cli.APPATERNO || ' ' ||
-    cli.APMATERNO AS "NOMBRE CLIENTE",
-    NRO_SOLIC_CREDITO,
-    TO_CHAR(MONTO_CREDITO, '$999G999G999')
-FROM CLIENTE cli JOIN CREDITO_CLIENTE cc ON cli.NRO_CLIENTE = cc.NRO_CLIENTE;
+    EXTRACT(YEAR FROM SYSDATE) AS "AÑO TRIBUTARIO",
+    TO_CHAR(c.numrun,'99G999G999')||'-'||c.DVRUN AS "RUN CLIENTE",
+    c.PNOMBRE || ' ' ||c.SNOMBRE || ' ' ||c.APPATERNO ||' '|| c.APMATERNO AS "NOMBRE CLIENTE",
+    COUNT(cc.nro_solic_credito) AS "TOTAL CREDITOS SOLICITADOS",
+    TO_CHAR(cc.monto_credito, '9G999G999') AS "MONTO TOTAL CREDITOS"
+    
+FROM CLIENTE c
+JOIN credito_cliente cc ON c.nro_cliente = cc.nro_cliente
+GROUP BY  c.numrun, c.dvrun, c.pnombre, c.snombre, c.appaterno, c.apmaterno,cc.nro_solic_credito,cc.monto_credito
+ORDER BY c.appaterno ASC
+;
 
 --Informe 2
 
 SELECT
-    TO_CHAR(cli.NUMRUN,'99G999G999')||'-'||
-    cli.DVRUN AS "RUN CLIENTE",
-    cli.PNOMBRE || ' ' ||
-    cli.SNOMBRE || ' ' ||
-    cli.APPATERNO || ' ' ||
-    cli.APMATERNO AS "NOMBRE CLIENTE"
-FROM CLIENTE cli;  
+    TO_CHAR(c.numrun,'09G999G999')||'-' || c.dvrun AS "RUN CLIENTE",
+    INITCAP(c.pnombre) || ' ' || INITCAP(c.snombre) ||' ' ||INITCAP(c.appaterno) || ' ' || INITCAP(c.apmaterno) AS "NOMBRE CLIENTE",
+    mov.cod_tipo_mov,
+    NVL(TO_CHAR((CASE WHEN mov.cod_tipo_mov=1 THEN mov.monto_movimiento END), 'L99G999G999'),'      NO REALIZO  ') AS "ABONOS",
+    NVL(TO_CHAR((CASE WHEN mov.cod_tipo_mov=2 THEN mov.monto_movimiento END), 'L99G999G999'),'              NO REALIZO  ') AS "RESCATES"
+FROM cliente c
+    JOIN movimiento mov ON c.nro_Cliente = mov.nro_cliente
+;
