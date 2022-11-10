@@ -1,4 +1,3 @@
--- 1
 SELECT 
     ts.descripcion ||','||
     s.descripcion AS "SISTEMA_SALUD",
@@ -20,4 +19,5 @@ HAVING COUNT(a.ate_id) >
                       WHERE EXTRACT(YEAR FROM a.fecha_atencion) = EXTRACT(YEAR FROM SYSDATE) 
                       AND EXTRACT(MONTH FROM a.fecha_atencion) = 9
                       GROUP BY ts.descripcion,s.descripcion)
-ORDER BY TIPO_SALUD,DSecripcion ;
+ORDER BY "SISTEMA_SALUD","TOTAL ATENCIONES" 
+;
