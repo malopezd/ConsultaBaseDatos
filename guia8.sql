@@ -21,3 +21,19 @@ HAVING COUNT(a.ate_id) >
                       GROUP BY ts.descripcion,s.descripcion)
 ORDER BY "SISTEMA_SALUD","TOTAL ATENCIONES" 
 ;
+
+--2
+
+SELECT
+    e.nombre AS "ESPECIALIDAD" ,
+    TO_CHAR(m.med_run,'99G999G999')||'-'||
+    m.dv_run AS "RUT",
+    m.PNOMBRE || ' ' ||
+    m.SNOMBRE || ' ' ||
+    m.APATERNO || ' ' ||
+    m.AMATERNO AS "MEDICO"
+FROM especialidad_medico em
+    JOIN medico m ON (em.med_run=m.med_run)
+    JOIN especialidad e ON (em.esp_id=e.esp_id)
+ORDER BY "ESPECIALIDAD",m.apaterno
+;
